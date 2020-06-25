@@ -65,14 +65,18 @@ const pageSections = () => {
 	let dataNav
 	let i
 	for (i = 0; i < mainSections.length; i++) {
+		anchorID = mainSections[i].getAttribute('id')
+		dataNav = mainSections[i].getAttribute('data-nav')
+
 		navUl.appendChild(document.createElement('li'))
 		navLi = document.querySelectorAll('li')
 		navLi[i].appendChild(document.createElement('a'))
+		navLi[i].setAttribute('class', anchorID)
+
 		navAnchor = document.querySelectorAll('a')
 		navAnchor[i].innerHTML = sectionsHead[i].innerHTML
-		anchorID = mainSections[i].getAttribute('id')
+		
 		navAnchor[i].setAttribute('href', `#${anchorID}`)
-		dataNav = mainSections[i].getAttribute('data-nav')
 		navAnchor[i].setAttribute('data-nav', dataNav)
 	}	 
 }
@@ -82,18 +86,24 @@ pageSections()
 // Add class 'active' to section when near top of viewport
 
 window.addEventListener('scroll', function() {
-	let i
-	for (i = 0; i < mainSections.length; i++) {	
-		if (window.pageYOffset == mainSections[i].offsetTop){
-			mainSections[i].classList.add('your-active-class')	
-		}
 
-		if (window.pageYOffset == mainSections[i].offsetTop + mainSections[i].offsetHeight) {
+	for (i = 0; i < mainSections.length; i++) {	
+		const box = mainSections[i].getBoundingClientRect()
+		const navLi = document.querySelectorAll('li')
+		const navLiClass = navLi[i].getAttribute('class')
+		
+		mainSectionId = mainSections[i].getAttribute('id')
+        if (box.top <= 250 && box.bottom >= 250) {
+			mainSections[i].classList.add('your-active-class')
+			mainSectionId == navLiClass ? navLi[i].classList.add('active') : ''
+			    
+        } else {
 			mainSections[i].classList.remove('your-active-class')
-		}
+			navLi[i].classList.remove('active')
+        }
 	}
 
-	if (window.pageYOffset >= 1200) {
+	if (window.getBoundingClientRect >= 1200) {
 		toTopButton.style.display = 'block'
 	} else {
 		toTopButton.style.display = 'none'
